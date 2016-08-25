@@ -1,0 +1,61 @@
+{
+  "name": "blocktrail-sdk-backup-generator",
+  "description": "Backup Generator for BlockTrail's Developer Friendly API binding for NodeJS",
+  "keywords": [
+    "blocktrail",
+    "bitcoin",
+    "sdk",
+    "api",
+    "blockchain",
+    "payment",
+    "bitcoin data",
+    "wallet",
+    "multi-signature",
+    "transaction"
+  ],
+  "version": "0.0.1",
+  "homepage": "https://www.blocktrail.com/api/docs/lang/nodejs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blocktrail/blocktrail-sdk-nodejs.git"
+  },
+  "bugs": {
+    "url": "http://github.com/blocktrail/blocktrail-sdk-nodejs/issues"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "main": "./main.js",
+  "browser": {
+    "./lib/backup_generator.js": "./lib/backup_generator-browser.js"
+  },
+  "dependencies": {
+    "async": "0.9.0",
+    "bowser": "^0.7.2",
+    "html-pdf": "1.0.*",
+    "lodash": "3.1.0",
+    "qrcode-canvas": "~0.0.1",
+    "qrcode-js": "git://github.com/blocktrail/qrcode-js.git#master"
+  },
+  "author": {
+    "name": "Ruben de Vries <ruben@blocktrail.com>"
+  },
+  "contributors": [
+    {
+      "name": "Ruben de Vries",
+      "email": "ruben@blocktrail.com"
+    },
+    {
+      "name": "Oisin Akiboye Conolly",
+      "email": "oisin@blocktrail.com"
+    }
+  ],
+  "devDependencies": {
+    "jshint": "~2.9.1",
+    "jscs": "~3.0.7"
+  },
+  "scripts": {
+    "lint": "./node_modules/jscs/bin/jscs main.js lib/ && ./node_modules/jscs/bin/jscs main.js main.js lib/"
+  }
+}
