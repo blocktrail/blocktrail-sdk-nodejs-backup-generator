@@ -53,9 +53,12 @@
   ],
   "devDependencies": {
     "jshint": "~2.9.1",
-    "jscs": "~3.0.7"
+    "jscs": "~3.0.7",
+    "assert-plus": "0.1.5",
+    "mocha": "*"
   },
   "scripts": {
+    "test": "mocha",
     "lint": "./node_modules/jscs/bin/jscs main.js lib/ && ./node_modules/jscs/bin/jscs main.js main.js lib/"
   }
 }
