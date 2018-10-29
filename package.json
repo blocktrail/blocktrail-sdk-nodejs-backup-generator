@@ -54,8 +54,7 @@
   "devDependencies": {
     "jshint": "~2.9.1",
     "jscs": "~3.0.7",
-    "assert-plus": "0.1.5",
-    "mocha": "*"
+    "assert-plus": "*"
   },
   "scripts": {
     "test": "mocha",

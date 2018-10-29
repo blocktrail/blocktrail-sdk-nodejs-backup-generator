@@ -5,16 +5,34 @@ branches:
    - master
 
 node_js:
- - '0.10.0'
+ - '0.10.48'
  - '4.0'
  - '5.11'
  - '6.3.0'
  - '7.1.0'
  - 'node'
 
+env:
+ - MOCHA_VERSION=*
+
+matrix:
+  exclude:
+    - node_js: 0.10.48
+      env: MOCHA_VERSION=*
+  include:
+    - node_js: 0.10.48
+      env: MOCHA_VERSION=3.5.*
+
 before_install:
- - npm install
+ # npmjs changed CA and broke old versions since nodejs doesn't have the system certificate store? for shame.
+ - echo ${TRAVIS_NODE_VERSION}
+ - |
+     if [ "${TRAVIS_NODE_VERSION}" = "0.10.0" ]; then
+         npm config set ca null && echo "npm - disabled strict-ssl"
+     fi
 
 script:
- - echo "TODO!"
-
+ - npm install mocha@$MOCHA_VERSION
+ - node ./node_modules/jshint/bin/jshint main.js lib/ test/
+ - node ./node_modules/jscs/bin/jscs main.js lib/ test/
+ - npm test
