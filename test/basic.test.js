@@ -39,17 +39,41 @@ describe('BackupGenerator', function() {
         {version: "3", data: V3BackupInfo}
     ];
 
-    fixtureData.map(function(testFixture) {
-        it('works for v' + testFixture.version + ' data', function(cb) {
-            var generator = new BackupGenerator("wallet-identifier-for-test", testFixture.data, [], {});
+    describe('generateHTML', function() {
+        fixtureData.map(function(testFixture) {
+            it('works for v' + testFixture.version, function(cb) {
+                var generator = new BackupGenerator("wallet-identifier-for-test", testFixture.data, [], {});
+                generator.generateHTML(function(err, html) {
+                    assert.ifError(err);
+                    assert.ok(html);
+                    assert.ok(-1 !== html.indexOf(brandingLogo));
+                    assert.ok(-1 !== html.indexOf(testFixture.data.encryptedPrimarySeed));
+                    assert.ok(-1 !== html.indexOf(testFixture.data.backupSeed));
+                    assert.ok(-1 !== html.indexOf(testFixture.data.recoveryEncryptedSecret));
+                    assert.ok(-1 !== html.indexOf(testFixture.data.encryptedSecret));
+
+                    // need to extract div class 'blocktrail-pubkeys' to determine if correct pubkey was embedded
+                    //assert.ok(-1 !== html.indexOf(testFixture.data.blocktrailPublicKeys["9999"].toBase58()));
+                    assert.ok(-1 !== html.indexOf("M/9999'"));
+                    cb();
+                });
+            });
+        });
+
+        it('allows overriding default branding logo', function(cb) {
+            var newLogo = "data:image/png;base64,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+            var generator = new BackupGenerator("wallet-identifier-for-test", V2BackupInfo, [], {
+                brandingLogo: newLogo
+            });
             generator.generateHTML(function(err, html) {
                 assert.ifError(err);
                 assert.ok(html);
-                assert.ok(-1 !== html.indexOf(brandingLogo));
-                assert.ok(-1 !== html.indexOf(testFixture.data.encryptedPrimarySeed));
-                assert.ok(-1 !== html.indexOf(testFixture.data.backupSeed));
-                assert.ok(-1 !== html.indexOf(testFixture.data.recoveryEncryptedSecret));
-                assert.ok(-1 !== html.indexOf(testFixture.data.encryptedSecret));
+                assert.ok(-1 === html.indexOf(brandingLogo));
+                assert.ok(-1 !== html.indexOf(newLogo));
+                assert.ok(-1 !== html.indexOf(V2BackupInfo.encryptedPrimarySeed));
+                assert.ok(-1 !== html.indexOf(V2BackupInfo.backupSeed));
+                assert.ok(-1 !== html.indexOf(V2BackupInfo.recoveryEncryptedSecret));
+                assert.ok(-1 !== html.indexOf(V2BackupInfo.encryptedSecret));
 
                 // need to extract div class 'blocktrail-pubkeys' to determine if correct pubkey was embedded
                 //assert.ok(-1 !== html.indexOf(testFixture.data.blocktrailPublicKeys["9999"].toBase58()));
@@ -59,25 +83,18 @@ describe('BackupGenerator', function() {
         });
     });
 
-    it('allows overriding default branding logo', function(cb) {
-        var newLogo = "data:image/png;base64,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-        var generator = new BackupGenerator("wallet-identifier-for-test", V2BackupInfo, [], {
-            brandingLogo: newLogo
-        });
-        generator.generateHTML(function(err, html) {
-            assert.ifError(err);
-            assert.ok(html);
-            assert.ok(-1 === html.indexOf(brandingLogo));
-            assert.ok(-1 !== html.indexOf(newLogo));
-            assert.ok(-1 !== html.indexOf(V2BackupInfo.encryptedPrimarySeed));
-            assert.ok(-1 !== html.indexOf(V2BackupInfo.backupSeed));
-            assert.ok(-1 !== html.indexOf(V2BackupInfo.recoveryEncryptedSecret));
-            assert.ok(-1 !== html.indexOf(V2BackupInfo.encryptedSecret));
-
-            // need to extract div class 'blocktrail-pubkeys' to determine if correct pubkey was embedded
-            //assert.ok(-1 !== html.indexOf(testFixture.data.blocktrailPublicKeys["9999"].toBase58()));
-            assert.ok(-1 !== html.indexOf("M/9999'"));
-            cb();
+    describe('generatePDF', function() {
+        fixtureData.map(function(testFixture) {
+            it('works for v' + testFixture.version, function(cb) {
+                var generator = new BackupGenerator("wallet-identifier-for-test", testFixture.data, [], {
+                    network: "Bitcoin"
+                });
+                generator.generatePDF("/tmp/pdf", function(err, pdf) {
+                    assert.ifError(err);
+                    assert.ok(pdf);
+                    cb();
+                });
+            });
         });
     });
 });
